@@ -1,5 +1,7 @@
 import pytest
-import time  # Добавьте этот импорт
+from selenium.webdriver.common.by import By  # Добавляем импорт By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from pages.reset_password_page import ResetPasswordPage
 
 class TestTogglePasswordVisibility:
@@ -24,8 +26,12 @@ class TestTogglePasswordVisibility:
         # Нажимаем на кнопку "показать/скрыть пароль"
         self.reset_password_page.click_eye_button()
 
-        # Ждем немного, чтобы дать странице время на обновление
-        time.sleep(1)  # Добавляем задержку, если необходимо
+        # Ожидаем, что тип поля ввода изменится на 'text'
+        WebDriverWait(self.driver, 10).until(
+            EC.text_to_be_present_in_element_attribute(
+                (By.XPATH, "//input[@name='Введите новый пароль']"), 'type', 'text'
+            )
+        )
 
         # Проверяем, что тип поля ввода изменился на 'text'
         assert self.reset_password_page.get_password_input_type() == "text"

@@ -1,6 +1,5 @@
-from pages.main_page import MainPage
 import pytest
-
+from pages.main_page import MainPage
 
 class TestOrderFeed:
     @pytest.fixture(autouse=True)
@@ -15,4 +14,4 @@ class TestOrderFeed:
         self.main_page.click_order_feed_button()
 
         # Проверяем, что URL соответствует ожидаемому
-        assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/feed", "Переход в Ленту заказов не удался."
+        self.main_page.verify_url("https://stellarburgers.nomoreparties.site/feed")

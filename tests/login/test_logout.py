@@ -1,8 +1,6 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.personal_account_page import PersonalAccountPage
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 class TestLogout:
     @pytest.fixture(autouse=True)
@@ -12,7 +10,8 @@ class TestLogout:
         self.personal_account_page = PersonalAccountPage(driver)
 
     def test_logout(self):
-        self.driver.get("https://stellarburgers.nomoreparties.site/login")
+        # Переходим на страницу входа
+        self.login_page.open()
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -28,9 +27,7 @@ class TestLogout:
         self.personal_account_page.click_logout_button()
 
         # Ожидаем, пока произойдет редирект на страницу входа
-        WebDriverWait(self.driver, 10).until(
-            EC.url_to_be("https://stellarburgers.nomoreparties.site/login")
-        )
+        self.personal_account_page.wait_for_logout_redirect()
 
         # Проверяем, что мы перешли на правильный URL
         assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/login", "Выход из аккаунта не удался."

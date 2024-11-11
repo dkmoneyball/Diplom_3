@@ -1,59 +1,39 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By  # Добавляем импорт
+from pages.base_page import BasePage
+from reset_password_page_locators import ResetPasswordPageLocators  # Импортируем локаторы
 
-class ResetPasswordPage:
+class ResetPasswordPage(BasePage):  # Наследуем от BasePage
     def __init__(self, driver):
-        self.driver = driver
+        super().__init__(driver)
 
     def enter_email(self, email):
-        # Ожидаем, пока поле ввода email станет видимым
-        email_input = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//body/div[@id='root']/div[1]/main[1]/div[1]/form[1]/fieldset[1]/div[1]/div[1]/input[1]"))
-        )
-        email_input.clear()  # Очищаем поле, если там что-то есть
-        email_input.send_keys(email)  # Вводим email
+        email_input = self.find_element(ResetPasswordPageLocators.EMAIL_INPUT)
+        email_input.clear()
+        email_input.send_keys(email)
 
     def click_recover_button(self):
-        # Ожидаем, пока кнопка "Восстановить" станет кликабельной
-        recover_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Восстановить')]"))
-        )
-        recover_button.click()  # Нажимаем на кнопку "Восстановить"
+        self.click_element(ResetPasswordPageLocators.RECOVER_BUTTON)
 
     def is_password_reset_heading_visible(self):
-        # Проверяем, что заголовок "Восстановление пароля" виден
-        heading = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Восстановление пароля')]"))
-        )
+        heading = self.find_element(ResetPasswordPageLocators.HEADING)
         return heading.is_displayed()
 
     def click_eye_button(self):
-        # Ожидаем, пока кнопка "глазик" станет кликабельной
-        eye_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//*[name()='path' and contains(@d,'M12 4C14.0')]"))
-        )
-        eye_button.click()  # Нажимаем на кнопку "глазик"
+        self.click_element(ResetPasswordPageLocators.EYE_BUTTON)
 
     def is_password_input_active(self):
-        # Ожидаем, пока поле ввода пароля станет видимым
-        password_input = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH,
-                                              "//div[@class='input pr-6 pl-6 input_type_password input_size_default input_status_active']/input"))
-        )
-
-        # Проверяем, что поле ввода отображается
-        is_displayed = password_input.is_displayed()
-
-        # Проверяем, что поле ввода имеет активный статус
-        is_active = "input_status_active" in password_input.find_element(By.XPATH, "..").get_attribute("class")
-
-        return is_displayed and is_active
+        password_input = self.find_element(ResetPasswordPageLocators.PASSWORD_INPUT)
+        return password_input.is_displayed() and "input_status_active" in password_input.find_element(By.XPATH, "..").get_attribute("class")
 
     def get_password_input_type(self):
-        # Ожидаем, пока поле ввода пароля станет видимым
-        password_input = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH,
-                                              "//input[@name='Введите новый пароль']"))
-        )
-        return password_input.get_attribute("type")  # Возвращаем тип поля ввода
+        password_input = self.find_element(ResetPasswordPageLocators.NEW_PASSWORD_INPUT)
+        return password_input.get_attribute("type")
+
+    def is_password_reset_successful(self):
+        # Проверяем, что мы находимся на правильной странице после нажатия на кнопку
+        return self.driver.current_url == "https://stellarburgers.nomoreparties.site/forgot-password"
+
+    def click_reset_password_button(self):
+        # Локатор кнопки "Восстановить"
+        recover_button = self.find_element((By.XPATH, "//a[contains(text(),'Восстановить пароль')]"))
+        recover_button.click()

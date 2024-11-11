@@ -10,7 +10,7 @@ class TestNavigateToOrderHistory:
         self.personal_account_page = PersonalAccountPage(driver)
 
     def test_navigate_to_order_history(self):
-        self.driver.get("https://stellarburgers.nomoreparties.site/login")
+        self.login_page.open()
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -24,6 +24,9 @@ class TestNavigateToOrderHistory:
 
         # Переход в Историю заказов
         self.personal_account_page.click_order_history()
+
+        # Ожидаем редирект на страницу Истории заказов
+        self.personal_account_page.wait_for_order_history_page()
 
         # Проверяем, что URL соответствует ожидаемому
         assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/account/order-history", "Переход в Историю заказов не удался."

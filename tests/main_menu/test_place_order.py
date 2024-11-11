@@ -1,9 +1,10 @@
+# test_place_order.py
+import pytest
 from pages.main_page import MainPage
 from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pytest
+from main_page_locators import MainPageLocators
+
 
 class TestPlaceOrder:
     @pytest.fixture(autouse=True)
@@ -14,7 +15,7 @@ class TestPlaceOrder:
 
     def test_place_order(self):
         # Переходим на страницу входа
-        self.driver.get("https://stellarburgers.nomoreparties.site/login")
+        self.login_page.open_page()  # Переход через Page Object
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -24,20 +25,21 @@ class TestPlaceOrder:
         self.login_page.click_login_button()
 
         # Ожидаем, пока ингредиент станет видимым
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//img[@alt='Флюоресцентная булка R2-D3']"))
-        )
+        self.main_page.wait_for_element_to_be_visible(MainPageLocators.INGREDIENT_BUTTON)
+
+        # Локаторы для ингредиента и области перетаскивания
+        ingredient_locator = MainPageLocators.INGREDIENT_BUTTON
+        drop_area_locator = MainPageLocators.DROP_AREA
 
         # Нажимаем на ингредиент и перетаскиваем его в правую часть экрана
-        self.main_page.drag_and_drop_ingredient()
+        self.main_page.drag_and_drop(ingredient_locator, drop_area_locator)
 
         # Нажимаем кнопку "Оформить заказ"
         self.main_page.click_place_order_button()
 
-        # Ожидаем появления локатора идентификатора заказа
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'идентификатор заказа')]"))
-        )
+        # Ожидаем появления идентификатора заказа
+        self.main_page.wait_for_order_identifier()
 
         # Проверяем, что отображается локатор идентификатора заказа
-        assert self.driver.find_element(By.XPATH, "//p[contains(text(),'идентификатор заказа')]").is_displayed(), "Идентификатор заказа не найден."
+        assert self.driver.find_element(By.XPATH,
+                                        "//p[contains(text(),'идентификатор заказа')]").is_displayed(), "Идентификатор заказа не найден."

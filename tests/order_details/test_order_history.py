@@ -1,10 +1,7 @@
+import pytest
 from pages.order_feed_page import OrderFeedPage
 from pages.login_page import LoginPage
-from pages.main_page import MainPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pytest
 
 class TestOrderHistory:
     @pytest.fixture(autouse=True)
@@ -12,7 +9,6 @@ class TestOrderHistory:
         self.driver = driver
         self.order_feed_page = OrderFeedPage(driver)
         self.login_page = LoginPage(driver)
-        self.main_page = MainPage(driver)
 
     def test_orders_displayed_in_feed(self):
         # Переходим на страницу входа
@@ -28,10 +24,8 @@ class TestOrderHistory:
         # Переходим на Ленту заказов
         self.driver.get("https://stellarburgers.nomoreparties.site/feed")
 
-        # Ожидаем, пока элемент с номером заказа станет видимым
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//p[normalize-space()='#0149762']"))
-        )
+        # Ожидаем, пока заказ с номером '#0149762' станет видимым
+        self.order_feed_page.wait_for_order_to_be_visible('#0151302')
 
-        # Проверяем, что локатор заказа отображается на странице
-        assert self.driver.find_element(By.XPATH, "//p[normalize-space()='#0149762']").is_displayed(), "Заказ не найден на странице Ленты заказов."
+        # Проверяем, что заказ отображается
+        assert self.order_feed_page.is_order_displayed('#0151302'), "Заказ не найден на странице Ленты заказов."

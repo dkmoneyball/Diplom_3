@@ -1,7 +1,5 @@
-# test_navigate_to_constructor.py
-from pages.main_page import MainPage
-from selenium.webdriver.common.by import By
 import pytest
+from pages.main_page import MainPage
 
 class TestNavigateToConstructor:
     @pytest.fixture(autouse=True)
@@ -16,4 +14,4 @@ class TestNavigateToConstructor:
         self.main_page.click_constructor_button()
 
         # Проверяем, что URL соответствует ожидаемому
-        assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/", "Переход на Конструктор не удался."
+        self.main_page.verify_url("https://stellarburgers.nomoreparties.site/")

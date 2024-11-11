@@ -1,9 +1,6 @@
+import pytest
 from pages.order_feed_page import OrderFeedPage
 from pages.login_page import LoginPage
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pytest
 
 class TestOrderFeed:
     @pytest.fixture(autouse=True)
@@ -30,4 +27,4 @@ class TestOrderFeed:
         self.order_feed_page.click_on_first_order()
 
         # Проверяем, что текст "Состав" отображается
-        assert self.driver.find_element(By.XPATH, "//p[contains(text(),'Cостав')]").is_displayed(), "Текст 'Состав' не найден."
+        assert self.order_feed_page.check_composition_text(), "Текст 'Состав' не найден."

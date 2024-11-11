@@ -1,25 +1,37 @@
 from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from personal_account_page_locators import PersonalAccountPageLocators
 
-class PersonalAccountPage:
+class PersonalAccountPage(BasePage):
     def __init__(self, driver):
-        self.driver = driver
+        super().__init__(driver)
 
     def click_personal_account_button(self):
-        personal_account_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//p[contains(text(),'Личный Кабинет')]"))
-        )
-        personal_account_button.click()
+        self.click_element(PersonalAccountPageLocators.PERSONAL_ACCOUNT_BUTTON)
 
     def click_order_history(self):
-        order_history_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(text(),'История заказов')]"))
-        )
-        order_history_button.click()
+        self.click_element(PersonalAccountPageLocators.ORDER_HISTORY_BUTTON)
 
     def click_logout_button(self):
-        logout_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Выход')]"))
+        self.click_element(PersonalAccountPageLocators.LOGOUT_BUTTON)
+
+    def wait_for_logout_redirect(self, time=10):
+        """Ожидаем редиректа на страницу входа после выхода"""
+        WebDriverWait(self.driver, time).until(
+            EC.url_to_be("https://stellarburgers.nomoreparties.site/login")
         )
-        logout_button.click()
+
+    def wait_for_order_history_page(self, time=10):
+        """Ожидаем редиректа на страницу истории заказов"""
+        WebDriverWait(self.driver, time).until(
+            EC.url_to_be("https://stellarburgers.nomoreparties.site/account/order-history")
+        )
+
+    def wait_for_personal_account_page(self, time=10):
+        """Ожидаем редиректа на страницу Личного кабинета"""
+        WebDriverWait(self.driver, time).until(
+            EC.url_to_be("https://stellarburgers.nomoreparties.site/account")
+        )
+

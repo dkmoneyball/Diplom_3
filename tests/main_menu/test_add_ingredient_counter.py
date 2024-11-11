@@ -1,9 +1,8 @@
-from pages.main_page import MainPage
+# test_add_ingredient_counter.py
+from main_page_locators import MainPageLocators
 import pytest
+from pages.main_page import MainPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 
 class TestAddIngredientCounter:
     @pytest.fixture(autouse=True)
@@ -12,21 +11,21 @@ class TestAddIngredientCounter:
         self.main_page = MainPage(driver)
 
     def test_add_ingredient_counter(self):
-        self.driver.get("https://stellarburgers.nomoreparties.site/")
+        self.main_page.open_page()
 
-        # Ожидаем, пока страница полностью загрузится
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//img[@alt='Флюоресцентная булка R2-D3']"))
-        )
+        # Ожидаем, пока ингредиент станет видимым
+        self.main_page.wait_for_element_to_be_visible(MainPageLocators.INGREDIENT_BUTTON)
 
-        # Нажимаем на ингредиент и перетаскиваем его в правую часть экрана
-        self.main_page.drag_and_drop_ingredient()
+        # Локаторы ингредиента и области для перетаскивания
+        ingredient_locator = MainPageLocators.INGREDIENT_BUTTON
+        drop_area_locator = MainPageLocators.DROP_AREA
 
-        # Ожидаем, пока появится текст с новым счетчиком ингредиентов
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'1976')]"))
-        )
+        # Перетаскиваем ингредиент
+        self.main_page.drag_and_drop_ingredient(ingredient_locator, drop_area_locator)
 
-        # Проверяем, что мы видим нужный счетчик
-        counter_text = self.driver.find_element(By.XPATH, "//p[contains(text(),'1976')]").text
+        # Ожидаем, пока появится счетчик
+        self.main_page.wait_for_ingredient_counter('1976')
+
+        # Проверяем, что счетчик ингредиентов увеличился
+        counter_text = self.main_page.get_ingredient_counter()
         assert counter_text == '1976', "Счетчик ингредиента не увеличился."
