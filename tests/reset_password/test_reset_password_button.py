@@ -1,6 +1,7 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.reset_password_page import ResetPasswordPage
+from ..urls import URLS
 
 
 class TestResetPassword:
@@ -12,7 +13,7 @@ class TestResetPassword:
 
     def test_navigate_to_reset_password(self):
         # Переход на страницу входа
-        self.driver.get("https://stellarburgers.nomoreparties.site/login")
+        self.driver.get(URLS["login_page"])
 
         # Нажимаем на кнопку "Восстановить пароль"
         self.login_page.click_reset_password_button()

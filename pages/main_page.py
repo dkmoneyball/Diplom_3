@@ -49,3 +49,11 @@ class MainPage(BasePage):
     def wait_for_order_identifier(self, time=10):
         """Ожидаем появления идентификатора заказа"""
         self.wait_for_element_to_be_visible(MainPageLocators.ORDER_IDENTIFIER, time)
+
+    def is_order_identifier_displayed(self):
+        """Проверяем, отображается ли идентификатор заказа."""
+        try:
+            element = self.find_element(MainPageLocators.ORDER_IDENTIFIER)
+            return element.is_displayed()
+        except:
+            return False

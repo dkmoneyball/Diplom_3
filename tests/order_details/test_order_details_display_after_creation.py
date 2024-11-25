@@ -1,6 +1,7 @@
 import pytest
 from pages.order_feed_page import OrderFeedPage
 from pages.login_page import LoginPage
+from ..urls import URLS  # Импортируем URL из urls.py
 
 class TestOrderFeed:
     @pytest.fixture(autouse=True)
@@ -11,7 +12,7 @@ class TestOrderFeed:
 
     def test_place_order_and_check_details(self):
         # Переходим на страницу входа
-        self.driver.get("https://stellarburgers.nomoreparties.site/login")
+        self.driver.get(URLS["login_page"])
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -21,7 +22,7 @@ class TestOrderFeed:
         self.login_page.click_login_button()
 
         # Переходим на Ленту заказов
-        self.driver.get("https://stellarburgers.nomoreparties.site/feed")
+        self.driver.get(f"{URLS['home_page']}feed")
 
         # Нажимаем на первый заказ
         self.order_feed_page.click_on_first_order()

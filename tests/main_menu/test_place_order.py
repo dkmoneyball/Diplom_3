@@ -2,7 +2,6 @@
 import pytest
 from pages.main_page import MainPage
 from pages.login_page import LoginPage
-from selenium.webdriver.common.by import By
 from main_page_locators import MainPageLocators
 
 
@@ -15,7 +14,7 @@ class TestPlaceOrder:
 
     def test_place_order(self):
         # Переходим на страницу входа
-        self.login_page.open_page()  # Переход через Page Object
+        self.login_page.open_page()
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -40,6 +39,5 @@ class TestPlaceOrder:
         # Ожидаем появления идентификатора заказа
         self.main_page.wait_for_order_identifier()
 
-        # Проверяем, что отображается локатор идентификатора заказа
-        assert self.driver.find_element(By.XPATH,
-                                        "//p[contains(text(),'идентификатор заказа')]").is_displayed(), "Идентификатор заказа не найден."
+        # Проверяем, что отображается идентификатор заказа
+        assert self.main_page.is_order_identifier_displayed(), "Идентификатор заказа не найден."

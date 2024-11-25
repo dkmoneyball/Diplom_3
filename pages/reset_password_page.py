@@ -1,6 +1,9 @@
 from selenium.webdriver.common.by import By  # Добавляем импорт
 from pages.base_page import BasePage
 from reset_password_page_locators import ResetPasswordPageLocators  # Импортируем локаторы
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from pages.base_page import BasePage
 
 class ResetPasswordPage(BasePage):  # Наследуем от BasePage
     def __init__(self, driver):
@@ -37,3 +40,15 @@ class ResetPasswordPage(BasePage):  # Наследуем от BasePage
         # Локатор кнопки "Восстановить"
         recover_button = self.find_element((By.XPATH, "//a[contains(text(),'Восстановить пароль')]"))
         recover_button.click()
+
+    def wait_for_url_to_be(self, url, timeout=10):
+        """Ожидает, пока текущий URL станет равен указанному."""
+        WebDriverWait(self.driver, timeout).until(EC.url_to_be(url))
+
+    def wait_for_password_input_type(self, expected_type, timeout=10):
+        """Ожидаем изменения типа поля ввода пароля."""
+        WebDriverWait(self.driver, timeout).until(
+            EC.text_to_be_present_in_element_attribute(
+                ResetPasswordPageLocators.NEW_PASSWORD_INPUT, 'type', expected_type
+            )
+        )
