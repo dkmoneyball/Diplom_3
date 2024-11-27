@@ -1,0 +1,8 @@
+/venv
+.idea/Diplom_3.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+__pycache__/
+pages/__pycache__/base_page.cpython-312.pyc
+.idea
