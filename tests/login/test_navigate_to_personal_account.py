@@ -1,6 +1,7 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.personal_account_page import PersonalAccountPage
+from ..urls import URLS  # Импортируем константы URL
 
 class TestNavigateToPersonalAccount:
     @pytest.fixture(autouse=True)
@@ -10,8 +11,8 @@ class TestNavigateToPersonalAccount:
         self.personal_account_page = PersonalAccountPage(driver)
 
     def test_navigate_to_personal_account(self):
-        # Переход на страницу входа с использованием метода open()
-        self.login_page.open()
+        # Переход на страницу входа с использованием констант
+        self.driver.get(URLS["login_page"])
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -27,4 +28,4 @@ class TestNavigateToPersonalAccount:
         self.personal_account_page.wait_for_personal_account_page()
 
         # Проверяем, что URL соответствует ожидаемому
-        assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/account", "Переход в Личный кабинет не удался."
+        assert self.driver.current_url == URLS["personal_account_page"], "Переход в Личный кабинет не удался."

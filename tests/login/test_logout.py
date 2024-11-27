@@ -1,6 +1,7 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.personal_account_page import PersonalAccountPage
+from ..urls import URLS  # Импортируем константы URL
 
 class TestLogout:
     @pytest.fixture(autouse=True)
@@ -10,8 +11,8 @@ class TestLogout:
         self.personal_account_page = PersonalAccountPage(driver)
 
     def test_logout(self):
-        # Переходим на страницу входа
-        self.login_page.open()
+        # Переходим на страницу входа с использованием URL из констант
+        self.driver.get(URLS["login_page"])
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -26,8 +27,8 @@ class TestLogout:
         # Нажимаем на кнопку "Выход"
         self.personal_account_page.click_logout_button()
 
-        # Ожидаем, пока произойдет редирект на страницу входа
+        # Ожидаем редирект на страницу входа
         self.personal_account_page.wait_for_logout_redirect()
 
-        # Проверяем, что мы перешли на правильный URL
-        assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/login", "Выход из аккаунта не удался."
+        # Проверяем, что URL соответствует ожидаемому
+        assert self.driver.current_url == URLS["login_page"], "Выход из аккаунта не удался."

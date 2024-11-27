@@ -5,3 +5,4 @@
 .idea/modules.xml
 __pycache__/
 pages/__pycache__/base_page.cpython-312.pyc
+.idea

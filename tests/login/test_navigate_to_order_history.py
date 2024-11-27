@@ -1,6 +1,7 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.personal_account_page import PersonalAccountPage
+from ..urls import URLS  # Импортируем константы URL
 
 class TestNavigateToOrderHistory:
     @pytest.fixture(autouse=True)
@@ -10,7 +11,8 @@ class TestNavigateToOrderHistory:
         self.personal_account_page = PersonalAccountPage(driver)
 
     def test_navigate_to_order_history(self):
-        self.login_page.open()
+        # Переход на страницу входа с использованием URL из констант
+        self.driver.get(URLS["login_page"])
 
         # Вводим email и пароль
         self.login_page.enter_email("danilll@mail.ru")
@@ -29,4 +31,4 @@ class TestNavigateToOrderHistory:
         self.personal_account_page.wait_for_order_history_page()
 
         # Проверяем, что URL соответствует ожидаемому
-        assert self.driver.current_url == "https://stellarburgers.nomoreparties.site/account/order-history", "Переход в Историю заказов не удался."
+        assert self.driver.current_url == URLS["order_history_page"], "Переход в Историю заказов не удался."
